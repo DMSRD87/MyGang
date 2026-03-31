@@ -213,10 +213,28 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--b);min-height
 .tr-unit{font-size:11px;color:var(--dim);white-space:nowrap}
 /* SUMMARY */
 .summary-wrap{padding:14px 16px 0}
+.period-nav{background:var(--hdr);border-radius:var(--r);padding:16px 18px;margin-bottom:14px}
+.period-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.period-label{display:flex;flex-direction:column;gap:3px}
+.period-title{font-family:var(--h);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.period-dates{font-family:var(--h);font-size:22px;font-weight:800;color:#fff;line-height:1.1}
+.period-badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;background:var(--amber);color:#000;margin-top:4px;align-self:flex-start}
+.period-stats{display:flex;gap:16px;flex-wrap:wrap}
+.ps-item{display:flex;flex-direction:column;align-items:center;padding:8px 12px;background:rgba(255,255,255,.07);border-radius:8px;min-width:70px}
+.ps-num{font-family:var(--h);font-size:24px;font-weight:800;color:var(--amber);line-height:1}
+.ps-lbl{font-size:10px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.4px;margin-top:2px}
+.ps-pay{font-family:var(--h);font-size:22px;font-weight:800;color:var(--green);line-height:1}
+.period-btns{display:flex;align-items:center;gap:8px;margin-top:2px}
+.period-btn{padding:7px 14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:7px;color:rgba(255,255,255,.8);font-size:12px;font-weight:700;cursor:pointer;font-family:var(--b);transition:.12s;white-space:nowrap}
+.period-btn:active{background:rgba(255,255,255,.2)}
+.period-btn:disabled{opacity:.3;cursor:default}
+.period-btn.current{background:var(--amber);border-color:var(--amber);color:#000;cursor:default}
 .summary-actions{margin-bottom:10px}
 .btn-copy{padding:10px 18px;background:var(--green);border:none;color:#fff;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--b)}
 .btn-copy:active{opacity:.85}
 .summary-pre{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;font-family:var(--m);font-size:11.5px;line-height:1.75;color:var(--text);overflow-x:auto;white-space:pre;margin-bottom:16px}
+.pay-day-sel{width:100%;padding:10px 12px;background:var(--card2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--b);font-size:15px;font-weight:600;outline:none;cursor:pointer}
+.pay-day-sel:focus{border-color:var(--amber)}
 /* PROGRESS */
 .prog-wrap{padding:12px 16px}
 .pc{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:12px}
@@ -317,7 +335,7 @@ const FARMS=[{id:'f1',name:'Datsun Station',address:'47 Datsun Road, Burra SA 54
 const CREW=[{id:'ds1',name:'Brady Hargreaves',role:'Shearer',phone:'0411 222 333',hasVehicle:true},{id:'ds2',name:'Jacko Murphy',role:'Shearer',phone:'0422 333 444',hasVehicle:false},{id:'ds3',name:'Tommy Walsh',role:'Shearer',phone:'0433 444 555',hasVehicle:true},{id:'ds4',name:'Stevo Robertson',role:'Shearer',phone:'0444 555 666',hasVehicle:false},{id:'ds5',name:'Anna Kowalski',role:'Wool Handler',phone:'0455 666 777',hasVehicle:true},{id:'ds6',name:'Susie Peters',role:'Wool Handler',phone:'0466 777 888',hasVehicle:false},{id:'ds7',name:'Debbie Lane',role:'Wool Classer',phone:'0477 888 999',hasVehicle:true},{id:'ds8',name:'Mick Talbot',role:'Presser',phone:'0488 999 000',hasVehicle:true},{id:'dh1',name:'Dingo Fraser',role:'Shearer',phone:'0411 100 200',hasVehicle:true},{id:'dh2',name:'Clarky Reid',role:'Shearer',phone:'0422 200 300',hasVehicle:false},{id:'dh3',name:'Baz Mitchell',role:'Shearer',phone:'0433 300 400',hasVehicle:true},{id:'dh4',name:'Thommo Sullivan',role:'Shearer',phone:'0444 400 500',hasVehicle:false},{id:'dh5',name:'Abbie Nguyen',role:'Wool Handler',phone:'0455 500 600',hasVehicle:true},{id:'dh6',name:'Kylie Turner',role:'Wool Handler',phone:'0466 600 700',hasVehicle:false},{id:'dh7',name:'Pete Barker',role:'Presser',phone:'0477 700 800',hasVehicle:true},{id:'dm1',name:'Robbo Denton',role:'Shearer',phone:'0411 110 220',hasVehicle:true},{id:'dm2',name:'Macca Thompson',role:'Shearer',phone:'0422 220 330',hasVehicle:false},{id:'dm3',name:'Willo Kerr',role:'Shearer',phone:'0433 330 440',hasVehicle:true},{id:'dm4',name:'Trev Stone',role:'Wool Handler',phone:'0444 440 550',hasVehicle:false},{id:'dm5',name:'Chook Wilson',role:'Wool Handler',phone:'0455 550 660',hasVehicle:true},{id:'dm6',name:'Phil Crawford',role:'Wool Classer',phone:'0466 660 770',hasVehicle:false},{id:'dm7',name:'Jack Ryan',role:'Presser',phone:'0477 770 880',hasVehicle:true},{id:'dl1',name:'Cazza Burns',role:'Shearer',phone:'0411 010 020',hasVehicle:true},{id:'dl2',name:'Johnno Watts',role:'Shearer',phone:'0422 020 030',hasVehicle:false},{id:'dl3',name:'Spud Lynch',role:'Shearer',phone:'0433 030 040',hasVehicle:true},{id:'dl4',name:'Mel Hughes',role:'Wool Handler',phone:'0444 040 050',hasVehicle:false},{id:'dl5',name:'Richo Palmer',role:'Penner',phone:'0455 050 060',hasVehicle:true}];
 const D0='2026-03-26',D1='2026-03-27',D2='2026-03-30',D3='2026-03-31';
 const mkRun=(id,type,desc,counts,ro)=>({id,mobs:[{id:id+'_m1',type,desc,counts,...(ro!=null?{rateOverride:ro}:{})}]});
-const mkRates=(ov={})=>({shearingPerHead:4.80,crutchingPerHead:1.55,woolHandlerPerRun:80,classerPerRun:110,pennerPerRun:85,presserPerRun:85,presserPerBale:14.20,baleThreshold:13,crewOverrides:{},shearerLoadings:{},travelDays:{},travelRate:{},...ov});
+const mkRates=(ov={})=>({shearingPerHead:4.80,crutchingPerHead:1.55,woolHandlerPerRun:80,classerPerRun:110,pennerPerRun:85,presserPerRun:85,presserPerBale:14.20,baleThreshold:13,crewOverrides:{},shearerLoadings:{},travelDays:{},travelRate:{},payDayOfWeek:4,...ov});
 const INIT_JOBS=[
   {id:'j1',jobNumber:'002101',farmId:'f1',type:'Shearing',notes_job:'Full shear — Merino Ewes, CRT and wig. 4 stands. BYO EVOs.',startDate:D0,daysAllocated:6,totalSheep:4500,evos:'BYO',crutchingTrailer:false,transport:true,accommodation:'Shearers quarters on property',status:'Active',crew:['ds1','ds2','ds3','ds4','ds5','ds6','ds7','ds8'],
     rates:mkRates({crewOverrides:{ds5:90,ds7:115},travelDays:{ds1:4,ds2:4,ds3:4,ds4:4,ds5:4,ds6:4,ds7:4,ds8:4},travelRate:{ds1:40,ds2:40,ds3:40,ds4:40,ds5:40,ds6:40,ds7:80,ds8:40}}),
@@ -388,14 +406,57 @@ function mobTotals(job,viewDate,shearers){
   });
   return Object.entries(all).filter(([,v])=>v.bf+v.today>0);
 }
+/* PAY PERIOD HELPERS */
+const DAY_FULL=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+function getPeriodForDate(dateStr,payDayOfWeek){
+  const [y,m,d]=dateStr.split('-').map(Number);
+  const dt=new Date(y,m-1,d);
+  const daysFromStart=(dt.getDay()-payDayOfWeek+7)%7;
+  const startStr=addDays(dateStr,-daysFromStart);
+  const endStr=addDays(startStr,6);
+  return{start:startStr,end:endStr};
+}
+function getPeriodByOffset(todayStr,payDayOfWeek,offset){
+  const base=getPeriodForDate(todayStr,payDayOfWeek);
+  return{start:addDays(base.start,7*offset),end:addDays(base.end,7*offset)};
+}
+function fmtPeriodLabel(start,end){
+  const [sy,sm,sd]=start.split('-').map(Number);
+  const [ey,em,ed]=end.split('-').map(Number);
+  const sdt=new Date(sy,sm-1,sd),edt=new Date(ey,em-1,ed);
+  const dn=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return dn[sdt.getDay()]+' '+sd+' '+mo[sm-1]+' \u2013 '+dn[edt.getDay()]+' '+ed+' '+mo[em-1];
+}
+function calcPeriodStats(job,period){
+  const shIds=job.crew.filter(id=>gc(id)?.role==='Shearer');
+  const rates=job.rates||{};
+  let shorn=0,totalEarn=0;
+  const inP=date=>date>=period.start&&date<=period.end;
+  Object.entries(job.runs||{}).forEach(([date,rs])=>{if(!inP(date))return;rs.forEach(run=>{mobsOf(run).forEach(mob=>{const br=mob.rateOverride!=null?mob.rateOverride:(mob.type==='Shearing'?rates.shearingPerHead:rates.crutchingPerHead)||0;shIds.forEach(id=>{const cnt=mob.counts[id]||0;if(!cnt)return;shorn+=cnt;const load=(rates.shearerLoadings||{})[id]||0;totalEarn+=cnt*(br+load);});});});});
+  // Shed staff
+  job.crew.filter(id=>gc(id)?.role!=='Shearer').forEach(id=>{
+    const ov=(rates.crewOverrides||{})[id];const c=gc(id);if(!c)return;
+    const defR=c.role==='Wool Classer'?rates.classerPerRun:c.role==='Penner'?rates.pennerPerRun:c.role==='Presser'?rates.presserPerRun:rates.woolHandlerPerRun;
+    const rpr=ov||defR||80;
+    if(c.role==='Presser'){Object.entries(job.shedTallies[id]||{}).forEach(([date,runs])=>{if(!inP(date))return;const bales=(job.baleTallies[id]||{})[date]||0;totalEarn+=bales>(rates.baleThreshold||13)?bales*(rates.presserPerBale||14.20):runs*rpr;});}
+    else{Object.entries(job.shedTallies[id]||{}).forEach(([date,runs])=>{if(!inP(date))return;totalEarn+=runs*rpr;});}
+    const td=rates.travelDays||{};const tr=rates.travelRate||{};
+    totalEarn+=(td[id]||0)*(tr[id]||0);
+  });
+  // Shearer travel
+  shIds.forEach(id=>{const td=rates.travelDays||{};const tr=rates.travelRate||{};totalEarn+=(td[id]||0)*(tr[id]||0);});
+  return{shorn,totalEarn};
+}
 /* PAY SUMMARY */
-function generateSummary(job){
+function generateSummary(job,period){
   const farm=gf(job.farmId);const rates=job.rates||{};
   const shIds=job.crew.filter(id=>gc(id)?.role==='Shearer');
   const shedIds=job.crew.filter(id=>gc(id)?.role!=='Shearer');
   const dash='\u2500'.repeat(52);
+  const inP=date=>!period||(date>=period.start&&date<=period.end);
   const shornBy={};shIds.forEach(id=>{shornBy[id]={sh:0,shEarn:0,cr:0,crEarn:0};});
-  Object.values(job.runs||{}).forEach(dayRuns=>{dayRuns.forEach(run=>{mobsOf(run).forEach(mob=>{const br=mob.rateOverride!=null?mob.rateOverride:(mob.type==='Shearing'?rates.shearingPerHead:rates.crutchingPerHead)||0;shIds.forEach(id=>{const cnt=mob.counts[id]||0;if(!cnt)return;const load=(rates.shearerLoadings||{})[id]||0;if(mob.type==='Shearing'){shornBy[id].sh+=cnt;shornBy[id].shEarn+=cnt*(br+load);}else{shornBy[id].cr+=cnt;shornBy[id].crEarn+=cnt*(br+load);}});});});});
+  Object.entries(job.runs||{}).forEach(([date,dayRuns])=>{if(!inP(date))return;dayRuns.forEach(run=>{mobsOf(run).forEach(mob=>{const br=mob.rateOverride!=null?mob.rateOverride:(mob.type==='Shearing'?rates.shearingPerHead:rates.crutchingPerHead)||0;shIds.forEach(id=>{const cnt=mob.counts[id]||0;if(!cnt)return;const load=(rates.shearerLoadings||{})[id]||0;if(mob.type==='Shearing'){shornBy[id].sh+=cnt;shornBy[id].shEarn+=cnt*(br+load);}else{shornBy[id].cr+=cnt;shornBy[id].crEarn+=cnt*(br+load);}});});});});
   const td=rates.travelDays||{};const tr=rates.travelRate||{};
   const trvl=id=>(td[id]||0)*(tr[id]||0);
   let totalShEarn=0,totalShedEarn=0,totalTravel=0;
@@ -403,6 +464,7 @@ function generateSummary(job){
   L.push('PAY SUMMARY \u2014 '+(farm?farm.name.toUpperCase():'JOB'));
   L.push('Contractor: Murphy Shearing');
   if(farm)L.push('Address: '+farm.address+'  |  From: '+job.startDate);
+  if(period)L.push('Pay Period: '+fmtPeriodLabel(period.start,period.end));
   L.push('Status: '+job.status.toUpperCase());
   L.push('');L.push(dash);L.push('');L.push('SHEARERS');L.push(dash);
   shIds.forEach(id=>{
@@ -423,13 +485,13 @@ function generateSummary(job){
     const ov=(rates.crewOverrides||{})[id];
     const defR=c.role==='Wool Classer'?rates.classerPerRun:c.role==='Penner'?rates.pennerPerRun:c.role==='Presser'?rates.presserPerRun:rates.woolHandlerPerRun;
     const rpr=ov||defR||80;
-    const totalRuns=Object.values(job.shedTallies[id]||{}).reduce((a,b)=>a+b,0);
+    const totalRuns=Object.entries(job.shedTallies[id]||{}).filter(([d])=>inP(d)).reduce((a,[,b])=>a+b,0);
     const travel=trvl(id);let earn=0,earnLine='';
     if(c.role==='Presser'){
       let rEarn=0,bEarn=0;
-      Object.entries(job.shedTallies[id]||{}).forEach(([date,runs])=>{const bales=(job.baleTallies[id]||{})[date]||0;if(bales>(rates.baleThreshold||13)){bEarn+=bales*(rates.presserPerBale||14.20);}else{rEarn+=runs*rpr;}});
+      Object.entries(job.shedTallies[id]||{}).forEach(([date,runs])=>{if(!inP(date))return;const bales=(job.baleTallies[id]||{})[date]||0;if(bales>(rates.baleThreshold||13)){bEarn+=bales*(rates.presserPerBale||14.20);}else{rEarn+=runs*rpr;}});
       earn=rEarn+bEarn;
-      const totalBales=Object.values(job.baleTallies[id]||{}).reduce((a,b)=>a+b,0)+(job.baleBF[id]||0);
+      const totalBales=Object.entries(job.baleTallies[id]||{}).filter(([d])=>inP(d)).reduce((a,[,b])=>a+b,0);
       if(bEarn>0&&rEarn>0){earnLine='  '+totalRuns+' runs @ $'+rpr.toFixed(2)+'/run = $'+rEarn.toFixed(2)+'\n  '+totalBales+' bales @ $'+(rates.presserPerBale||14.20).toFixed(2)+'/bale = $'+bEarn.toFixed(2);}
       else if(bEarn>0){earnLine='  '+totalBales+' bales @ $'+(rates.presserPerBale||14.20).toFixed(2)+'/bale = $'+earn.toFixed(2);}
       else{earnLine='  '+totalRuns+' runs @ $'+rpr.toFixed(2)+'/run = $'+earn.toFixed(2);}
@@ -632,10 +694,47 @@ function TallyTab({job,setJob,role,viewDate,setViewDate}){
 }
 /* ── SUMMARY TAB ── */
 function SummaryTab({job}){
+  const rates=job.rates||{};
+  const payDayOfWeek=rates.payDayOfWeek!=null?rates.payDayOfWeek:4;
+  const todayStr=localToday();
+  const [offset,setOffset]=useState(0);
   const [copied,setCopied]=useState(false);
-  const text=generateSummary(job);
+  const period=getPeriodByOffset(todayStr,payDayOfWeek,offset);
+  const isCurrentPeriod=offset===0;
+  const isFuture=period.start>todayStr;
+  const stats=calcPeriodStats(job,period);
+  const text=generateSummary(job,period);
   const copy=()=>{navigator.clipboard.writeText(text).then(()=>{setCopied(true);setTimeout(()=>setCopied(false),2000);}).catch(()=>{});};
-  return e('div',{className:'summary-wrap'},e('div',{className:'summary-actions'},e('button',{className:'btn-copy',onClick:copy},copied?'✓ Copied!':'📋 Copy Pay Summary')),e('pre',{className:'summary-pre'},text));
+  const prevLabel='← '+DAY_FULL[payDayOfWeek].slice(0,3)+' '+addDays(period.start,-7).split('-')[2]+'/'+addDays(period.start,-7).split('-')[1];
+  const nextLabel=DAY_FULL[payDayOfWeek].slice(0,3)+' '+addDays(period.start,7).split('-')[2]+'/'+addDays(period.start,7).split('-')[1]+' →';
+  return e('div',{className:'summary-wrap'},
+    e('div',{className:'period-nav'},
+      e('div',{className:'period-top'},
+        e('div',{className:'period-label'},
+          e('div',{className:'period-title'},'Pay Period — '+DAY_FULL[payDayOfWeek]+' pays'),
+          e('div',{className:'period-dates'},fmtPeriodLabel(period.start,period.end)),
+          isCurrentPeriod&&e('span',{className:'period-badge'},'Current period')
+        ),
+        stats.shorn>0&&!isFuture&&e('div',{className:'period-stats'},
+          e('div',{className:'ps-item'},e('div',{className:'ps-num'},stats.shorn.toLocaleString()),e('div',{className:'ps-lbl'},'Sheep')),
+          e('div',{className:'ps-item'},e('div',{className:'ps-pay'},'$'+Math.round(stats.totalEarn).toLocaleString()),e('div',{className:'ps-lbl'},'Est. Payroll'))
+        )
+      ),
+      e('div',{className:'period-btns'},
+        e('button',{className:'period-btn',onClick:()=>setOffset(o=>o-1)},prevLabel),
+        isCurrentPeriod
+          ?e('span',{className:'period-btn current'},'Current')
+          :e('button',{className:'period-btn',onClick:()=>setOffset(0)},'Jump to Current'),
+        e('button',{className:'period-btn',onClick:()=>setOffset(o=>o+1)},nextLabel)
+      )
+    ),
+    isFuture
+      ?e('div',{style:{padding:'32px 0',textAlign:'center',color:'var(--dim)'}},e('div',{style:{fontSize:32,marginBottom:8}},'📅'),e('div',null,'Future period — no data yet'))
+      :e('div',null,
+          e('div',{className:'summary-actions'},e('button',{className:'btn-copy',onClick:copy},copied?'✓ Copied!':'📋 Copy Pay Summary')),
+          e('pre',{className:'summary-pre'},text)
+        )
+  );
 }
 /* ── ADMIN TAB ── */
 function AdminTab({job,setJob}){
@@ -655,6 +754,18 @@ function AdminTab({job,setJob}){
     shearers.length>0&&e('div',{className:'admin-section'},e('div',{className:'admin-sec-hdr'},e('div',{className:'admin-sec-title'},'Shearer Rate Loadings'),e('div',{className:'admin-sec-sub'},'Added on top of base rate per head — entire job')),shearers.map(id=>{const c=gc(id);if(!c)return null;const cur=(rates.shearerLoadings||{})[id]||0;return e('div',{key:id,className:'loading-row'},e('div',{className:'lr-l'},e(Av,{name:c.name,size:32}),e('div',null,e('div',{className:'lr-name'},c.name),e('div',{className:'lr-role'},'Shearer'))),e('div',{className:'lr-r'},e('span',{className:'lr-prefix'},'+$'),e('input',{type:'number',className:'lr-inp',value:cur||'',placeholder:'0',step:'0.05',onChange:ev=>setLoad(id,ev.target.value)}),e('span',{className:'lr-unit'},'/head')));})),
     e('div',{className:'admin-section'},e('div',{className:'admin-sec-hdr'},e('div',{className:'admin-sec-title'},'Travel'),e('div',{className:'admin-sec-sub'},'Days × daily rate per person (used in pay summary)')),
       job.crew.map(id=>{const c=gc(id);if(!c)return null;const days=(rates.travelDays||{})[id]||'';const rate=(rates.travelRate||{})[id]||'';return e('div',{key:id,className:'loading-row'},e('div',{className:'lr-l'},e(Av,{name:c.name,size:32}),e('div',null,e('div',{className:'lr-name'},c.name),e('div',{className:'lr-role'},c.role))),e('div',{className:'lr-r',style:{gap:8}},e('span',{style:{display:'flex',alignItems:'center',gap:3}},e('input',{type:'number',className:'tr-inp',value:days,placeholder:'0',min:0,onChange:ev=>setTD(id,ev.target.value)}),e('span',{className:'tr-unit'},'days')),e('span',{style:{display:'flex',alignItems:'center',gap:3}},e('span',{className:'lr-prefix'},'$'),e('input',{type:'number',className:'tr-inp',style:{width:52},value:rate,placeholder:'40',step:'5',onChange:ev=>setTR(id,ev.target.value)}),e('span',{className:'tr-unit'},'/day'))));})
+    ),
+    e('div',{className:'admin-section'},
+      e('div',{className:'admin-sec-hdr'},e('div',{className:'admin-sec-title'},'Pay Settings'),e('div',{className:'admin-sec-sub'},'Weekly pay cycle — Summary tab navigates by these 7-day periods')),
+      e('div',{style:{padding:'14px'}},
+        e('div',{className:'rate-lbl',style:{marginBottom:8}},'Pay Day — wages processed on this day for the prior 7 days'),
+        e('select',{className:'pay-day-sel',value:rates.payDayOfWeek!=null?rates.payDayOfWeek:4,onChange:ev=>setJob(prev=>({...prev,rates:{...prev.rates,payDayOfWeek:parseInt(ev.target.value)}}))},
+          DAY_FULL.map((day,i)=>e('option',{key:i,value:i},day))
+        ),
+        e('div',{style:{fontSize:'12px',color:'var(--muted)',marginTop:8}},
+          'Period: '+DAY_FULL[rates.payDayOfWeek!=null?rates.payDayOfWeek:4]+' 12:00am \u2192 '+DAY_FULL[((rates.payDayOfWeek!=null?rates.payDayOfWeek:4)+6)%7]+' 11:59pm (7 days)'
+        )
+      )
     ),
     e('div',{style:{height:16}})
   );
