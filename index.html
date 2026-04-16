@@ -351,6 +351,24 @@ textarea.fi{resize:none;line-height:1.5}
 .chip-wrap{display:flex;flex-wrap:wrap;gap:6px}
 .chip{padding:6px 10px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;background:var(--card2);border:1px solid var(--border);color:var(--muted);transition:.15s}
 .chip.sel{background:var(--amberD);border-color:var(--amberB);color:var(--amber)}
+.crew-group-lbl{font-family:var(--h);font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--amber);margin:12px 0 6px;padding-left:2px}
+.crew-group-lbl:first-child{margin-top:0}
+.add-inline-btn{width:100%;padding:9px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;background:none;border:2px dashed var(--border);color:var(--muted);margin-top:8px;font-family:var(--b);transition:.12s}
+.add-inline-btn:hover{border-color:var(--amber);color:var(--amber)}
+.inline-form{background:var(--card2);border:1px solid var(--amberB);border-radius:10px;padding:12px;margin-top:8px}
+.inline-form-title{font-family:var(--h);font-size:13px;font-weight:700;color:var(--amber);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
+.inline-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.inline-form-full{grid-column:span 2}
+.if-lbl{font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
+.if-inp{width:100%;padding:8px 10px;background:var(--card);border:1px solid var(--border);border-radius:6px;font-family:var(--b);font-size:13px;color:var(--text);outline:none}
+.if-inp:focus{border-color:var(--amber)}
+.if-sel{width:100%;padding:8px 10px;background:var(--card);border:1px solid var(--border);border-radius:6px;font-family:var(--b);font-size:13px;color:var(--text);outline:none;cursor:pointer}
+.if-sel:focus{border-color:var(--amber)}
+.if-btns{display:flex;gap:6px}
+.if-save{flex:1;padding:9px;background:var(--amber);border:none;border-radius:7px;font-size:13px;font-weight:700;color:#000;cursor:pointer;font-family:var(--b)}
+.if-cancel{padding:9px 14px;background:none;border:1px solid var(--border);border-radius:7px;font-size:13px;cursor:pointer;color:var(--muted);font-family:var(--b)}
+.farm-search{width:100%;padding:9px 12px;background:var(--card);border:1px solid var(--border);border-radius:8px 8px 0 0;font-family:var(--b);font-size:13px;color:var(--text);outline:none;border-bottom:none}
+.farm-search:focus{border-color:var(--amber)}
 </style>
 </head>
 <body>
@@ -1055,17 +1073,53 @@ function SMSModal({job,onClose,onPreview}){
   ));
 }
 /* ── NEW JOB ── */
-function NewJobModal({onClose,onCreate}){
+function NewJobModal({onClose,onCreate,farmList,crewList,addFarm,addCrew}){
   const [type,setType]=useState('Shearing'),[farmId,setFarmId]=useState(''),[startDate,setStartDate]=useState(localToday()),[days,setDays]=useState(''),[sheep,setSheep]=useState(''),[evos,setEvos]=useState('BYO'),[transport,setTransport]=useState(true),[accomm,setAccomm]=useState(''),[notes,setNotes]=useState(''),[selCrew,setSelCrew]=useState([]);
+  const [farmSearch,setFarmSearch]=useState('');
+  const [showAddFarm,setShowAddFarm]=useState(false);
+  const [newFarm,setNewFarm]=useState({name:'',address:'',stands:'',notes:''});
+  const [showAddCrew,setShowAddCrew]=useState(false);
+  const [newCrew,setNewCrew]=useState({name:'',role:'Shearer',phone:'',hasVehicle:false});
+  const ROLES=['Shearer','Crutcher','Wool Handler','Wool Classer','Presser','Penner'];
   const tog=id=>setSelCrew(p=>p.includes(id)?p.filter(x=>x!==id):[...p,id]);
   const ok=farmId&&startDate&&days&&sheep&&selCrew.length>0;
   const doCreate=()=>{if(!ok)return;onCreate({id:'j'+Date.now(),jobNumber:String(Math.floor(2104+Math.random()*50)).padStart(6,'0'),farmId,type,notes_job:notes,startDate,daysAllocated:parseInt(days),totalSheep:parseInt(sheep),evos,crutchingTrailer:false,transport,accommodation:accomm,status:'Active',crew:selCrew,rates:mkRates(),runs:{},shedTallies:{},baleTallies:{},baleBF:{},dayNotes:{}});};
+  const doAddFarm=()=>{if(!newFarm.name||!newFarm.address)return;const f={id:'f'+Date.now(),name:newFarm.name,address:newFarm.address,stands:parseInt(newFarm.stands)||4,notes:newFarm.notes};addFarm(f);setFarmId(f.id);setShowAddFarm(false);setNewFarm({name:'',address:'',stands:'',notes:''});};
+  const doAddCrew=()=>{if(!newCrew.name)return;const c={id:'cx'+Date.now(),name:newCrew.name,role:newCrew.role,phone:newCrew.phone,hasVehicle:newCrew.hasVehicle};addCrew(c);setSelCrew(p=>[...p,c.id]);setShowAddCrew(false);setNewCrew({name:'',role:'Shearer',phone:'',hasVehicle:false});};
+  const filteredFarms=farmList.filter(f=>f.name.toLowerCase().includes(farmSearch.toLowerCase())||f.address.toLowerCase().includes(farmSearch.toLowerCase()));
+  /* Group crew by role */
+  const ROLE_ORDER=['Shearer','Crutcher','Wool Handler','Wool Classer','Presser','Penner'];
+  const crewByRole=ROLE_ORDER.reduce((acc,r)=>{const members=crewList.filter(c=>c.role===r);if(members.length)acc.push({role:r,members});return acc;},[]);
   const FF=({label,children})=>e('div',{className:'ff'},e('div',{className:'fl'},label),children);
+  const IField=({lbl,children})=>e('div',null,e('div',{className:'if-lbl'},lbl),children);
   return e('div',{className:'overlay'},e('div',{className:'sheet'},
     e('div',{className:'sheet-handle'}),e('div',{className:'sheet-title'},'New Job'),
     e('div',{className:'sheet-scroll'},
       e(FF,{label:'Job Type'},e('div',{className:'tog-row'},...['Shearing','Crutching'].map(t=>e('button',{key:t,className:`tog-opt${type===t?' on':''}`,onClick:()=>setType(t)},t)))),
-      e(FF,{label:'Select Farm'},e('div',{className:'farm-list'},FARMS.map(f=>e('div',{key:f.id,className:`farm-opt${farmId===f.id?' sel':''}`,onClick:()=>setFarmId(f.id)},e('div',{className:'fo-name'},f.name),e('div',{className:'fo-addr'},f.address))))),
+
+      /* FARM — search + list + add new */
+      e(FF,{label:'Select Farm'},
+        e('div',null,
+          e('input',{type:'text',className:'farm-search',placeholder:'🔍 Search farms...',value:farmSearch,onChange:ev=>setFarmSearch(ev.target.value)}),
+          e('div',{className:'farm-list',style:{borderRadius:'0 0 8px 8px'}},
+            filteredFarms.length>0
+              ?filteredFarms.map(f=>e('div',{key:f.id,className:`farm-opt${farmId===f.id?' sel':''}`,onClick:()=>setFarmId(f.id)},e('div',{className:'fo-name'},f.name),e('div',{className:'fo-addr'},f.address)))
+              :e('div',{style:{padding:'12px',color:'var(--dim)',fontSize:'13px',textAlign:'center'}},'No farms match — add one below')
+          ),
+          !showAddFarm&&e('button',{className:'add-inline-btn',onClick:()=>setShowAddFarm(true)},'+ Add New Farm'),
+          showAddFarm&&e('div',{className:'inline-form'},
+            e('div',{className:'inline-form-title'},'New Farm'),
+            e('div',{className:'inline-form-grid'},
+              e('div',{className:'inline-form-full'},e(IField,{lbl:'Farm Name'},e('input',{type:'text',className:'if-inp',placeholder:'e.g. Smith Station',value:newFarm.name,onChange:ev=>setNewFarm(p=>({...p,name:ev.target.value}))}))),
+              e('div',{className:'inline-form-full'},e(IField,{lbl:'Address'},e('input',{type:'text',className:'if-inp',placeholder:'e.g. 12 Station Rd, Naracoorte SA 5271',value:newFarm.address,onChange:ev=>setNewFarm(p=>({...p,address:ev.target.value}))}))),
+              e('div',null,e(IField,{lbl:'Stands'},e('input',{type:'number',className:'if-inp',placeholder:'4',min:1,value:newFarm.stands,onChange:ev=>setNewFarm(p=>({...p,stands:ev.target.value}))}))),
+              e('div',null,e(IField,{lbl:'Notes (optional)'},e('input',{type:'text',className:'if-inp',placeholder:'e.g. Gate code 1234',value:newFarm.notes,onChange:ev=>setNewFarm(p=>({...p,notes:ev.target.value}))})))
+            ),
+            e('div',{className:'if-btns'},e('button',{className:'if-cancel',onClick:()=>setShowAddFarm(false)},'Cancel'),e('button',{className:'if-save',disabled:!newFarm.name||!newFarm.address,onClick:doAddFarm},'Add Farm'))
+          )
+        )
+      ),
+
       e(FF,{label:'Start Date'},e('input',{type:'date',className:'fi',value:startDate,onChange:ev=>setStartDate(ev.target.value)})),
       e(FF,{label:'Days Allocated'},e('input',{type:'number',className:'fi',placeholder:'e.g. 5',value:days,onChange:ev=>setDays(ev.target.value),min:1})),
       e(FF,{label:'Total Sheep'},e('input',{type:'number',className:'fi',placeholder:'e.g. 3000',value:sheep,onChange:ev=>setSheep(ev.target.value),min:1})),
@@ -1073,7 +1127,36 @@ function NewJobModal({onClose,onCreate}){
       e(FF,{label:'Transport'},e('div',{className:'tog-row'},...[['Yes',true],['No',false]].map(([l,v])=>e('button',{key:l,className:`tog-opt${transport===v?' on':''}`,onClick:()=>setTransport(v)},l)))),
       e(FF,{label:'Accommodation'},e('input',{type:'text',className:'fi',placeholder:'e.g. Shearers quarters on property',value:accomm,onChange:ev=>setAccomm(ev.target.value)})),
       e(FF,{label:'Notes'},e('textarea',{className:'fi',rows:3,placeholder:'e.g. Merino full CRT and wig.',value:notes,onChange:ev=>setNotes(ev.target.value)})),
-      e(FF,{label:`Select Crew (${selCrew.length} selected)`},e('div',{className:'chip-wrap'},CREW.map(c=>e('div',{key:c.id,className:`chip${selCrew.includes(c.id)?' sel':''}`,onClick:()=>tog(c.id)},c.name.split(' ')[0]+' ('+c.role.split(' ').map(w=>w[0]).join('.')+')'))))
+
+      /* CREW — grouped by role + add new */
+      e(FF,{label:`Select Crew (${selCrew.length} selected)`},
+        e('div',null,
+          crewByRole.map(({role:r,members})=>e('div',{key:r},
+            e('div',{className:'crew-group-lbl'},r+'s'),
+            e('div',{className:'chip-wrap'},
+              members.map(c=>e('div',{key:c.id,className:`chip${selCrew.includes(c.id)?' sel':''}`,onClick:()=>tog(c.id)},
+                c.name.split(' ')[0]+(c.hasVehicle?' 🚗':'')
+              ))
+            )
+          )),
+          !showAddCrew&&e('button',{className:'add-inline-btn',onClick:()=>setShowAddCrew(true)},'+ Add New Crew Member'),
+          showAddCrew&&e('div',{className:'inline-form'},
+            e('div',{className:'inline-form-title'},'New Crew Member'),
+            e('div',{className:'inline-form-grid'},
+              e('div',{className:'inline-form-full'},e(IField,{lbl:'Full Name'},e('input',{type:'text',className:'if-inp',placeholder:'e.g. Johnno Smith',value:newCrew.name,onChange:ev=>setNewCrew(p=>({...p,name:ev.target.value}))}))),
+              e('div',null,e(IField,{lbl:'Role'},e('select',{className:'if-sel',value:newCrew.role,onChange:ev=>setNewCrew(p=>({...p,role:ev.target.value}))},ROLES.map(r=>e('option',{key:r,value:r},r))))),
+              e('div',null,e(IField,{lbl:'Mobile'},e('input',{type:'tel',className:'if-inp',placeholder:'04XX XXX XXX',value:newCrew.phone,onChange:ev=>setNewCrew(p=>({...p,phone:ev.target.value}))}))),
+              e('div',{className:'inline-form-full'},
+                e('label',{style:{display:'flex',alignItems:'center',gap:8,fontSize:'13px',fontWeight:600,cursor:'pointer'}},
+                  e('input',{type:'checkbox',checked:newCrew.hasVehicle,onChange:ev=>setNewCrew(p=>({...p,hasVehicle:ev.target.checked}))}),
+                  '🚗 Has own vehicle'
+                )
+              )
+            ),
+            e('div',{className:'if-btns'},e('button',{className:'if-cancel',onClick:()=>setShowAddCrew(false)},'Cancel'),e('button',{className:'if-save',disabled:!newCrew.name,onClick:doAddCrew},'Add & Select'))
+          )
+        )
+      )
     ),
     e('div',{className:'sheet-footer'},e('button',{className:'btn-g',onClick:onClose},'Cancel'),e('button',{className:'btn-p',disabled:!ok,style:{opacity:ok?1:.4},onClick:doCreate},ok?'Create Job':'Fill required fields'))
   ));
@@ -1087,17 +1170,23 @@ function HomeScreen({jobs,role,setRole,onJob,onNew}){
 /* ── APP ── */
 function App(){
   const [role,setRole]=useState('admin'),[screen,setScreen]=useState('home'),[selJobId,setSelJobId]=useState(null),[jobs,setJobs]=useState(INIT_JOBS),[showSMS,setShowSMS]=useState(false),[showNew,setShowNew]=useState(false),[previewId,setPreviewId]=useState(null);
+  const [farmList,setFarmList]=useState([...FARMS]);
+  const [crewList,setCrewList]=useState([...CREW]);
+  const addFarm=f=>setFarmList(p=>[...p,f]);
+  const addCrew=c=>setCrewList(p=>[...p,c]);
+  const gfl=id=>farmList.find(f=>f.id===id);
+  const gcl=id=>crewList.find(c=>c.id===id);
   const selJob=jobs.find(j=>j.id===selJobId);
   const setSelJob=fn=>setJobs(prev=>prev.map(j=>j.id===selJobId?fn(j):j));
   const goJob=id=>{setSelJobId(id);setScreen('job');};
   const goHome=()=>{setScreen('home');setSelJobId(null);setShowSMS(false);setPreviewId(null);};
   const doCreate=job=>{setJobs(p=>[job,...p]);setShowNew(false);setSelJobId(job.id);setScreen('job');};
   return e('div',null,
-    screen==='home'&&e(HomeScreen,{jobs,role,setRole,onJob:goJob,onNew:()=>setShowNew(true)}),
-    screen==='job'&&selJob&&e(JobDetailScreen,{job:selJob,setJob:setSelJob,role,setRole,onBack:goHome,onSend:()=>setShowSMS(true)}),
-    showSMS&&selJob&&e(SMSModal,{job:selJob,onClose:()=>{setShowSMS(false);setPreviewId(null);},onPreview:id=>setPreviewId(id)}),
-    previewId&&selJob&&e(JobCardView,{job:selJob,crewId:previewId,onClose:()=>setPreviewId(null)}),
-    showNew&&e(NewJobModal,{onClose:()=>setShowNew(false),onCreate:doCreate})
+    screen==='home'&&e(HomeScreen,{jobs,role,setRole,onJob:goJob,onNew:()=>setShowNew(true),gfl,gcl}),
+    screen==='job'&&selJob&&e(JobDetailScreen,{job:selJob,setJob:setSelJob,role,setRole,onBack:goHome,onSend:()=>setShowSMS(true),gfl,gcl}),
+    showSMS&&selJob&&e(SMSModal,{job:selJob,onClose:()=>{setShowSMS(false);setPreviewId(null);},onPreview:id=>setPreviewId(id),gcl}),
+    previewId&&selJob&&e(JobCardView,{job:selJob,crewId:previewId,onClose:()=>setPreviewId(null),gfl,gcl}),
+    showNew&&e(NewJobModal,{onClose:()=>setShowNew(false),onCreate:doCreate,farmList,crewList,addFarm,addCrew})
   );
 }
 ReactDOM.createRoot(document.getElementById('root')).render(e(App));
